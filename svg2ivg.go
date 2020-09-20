@@ -206,7 +206,7 @@ func genPathData(enc *iconvg.Encoder, adj uint8, pathData string, size float32, 
 	}
 	r := strings.NewReader(pathData)
 
-	var args [6]float32
+	var args [7]float32
 	op, relative, started := byte(0), false, false
 	for {
 		b, err := r.ReadByte()
@@ -240,6 +240,8 @@ func genPathData(enc *iconvg.Encoder, adj uint8, pathData string, size float32, 
 			n = 1
 		case 'M', 'm':
 			n = 2
+		case 'a', 'A':
+			n = 7
 		case 'Z', 'z':
 		default:
 			return fmt.Errorf("unknown opcode %c\n", b)
@@ -286,12 +288,16 @@ func genPathData(enc *iconvg.Encoder, adj uint8, pathData string, size float32, 
 			}
 		case 'm':
 			enc.ClosePathRelMoveTo(args[0], args[1])
+		case 'A':
+			enc.AbsArcTo(args[0], args[1], args[2], args[3] == 1, args[4] == 1, args[4], args[6])
+		case 'a':
+			enc.RelArcTo(args[0], args[1], args[2], args[3] == 1, args[4] == 1, args[4], args[6])
 		}
 	}
 	return nil
 }
 
-func scan(args *[6]float32, r *strings.Reader, n int) {
+func scan(args *[7]float32, r *strings.Reader, n int) {
 	for i := 0; i < n; i++ {
 		for {
 			if b, _ := r.ReadByte(); b != ' ' {
@@ -311,7 +317,7 @@ func atof(s []byte) (float32, error) {
 	return float32(f), err
 }
 
-func normalize(args *[6]float32, n int, op byte, size float32, offset f32.Vec2, relative bool) {
+func normalize(args *[7]float32, n int, op byte, size float32, offset f32.Vec2, relative bool) {
 	for i := 0; i < n; i++ {
 		args[i] *= outSize / size
 		if relative {
