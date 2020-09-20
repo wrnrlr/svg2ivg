@@ -29,7 +29,7 @@ func main() {
 		panic(err)
 	}
 	for _, match := range matches {
-		fileName := strings.TrimRight(strings.Title(match), ".svg")
+		fileName := strings.Title(strings.TrimRight(match, ".svg"))
 		f, err := os.Open(match)
 		if err != nil {
 			panic(err)
