@@ -14,7 +14,10 @@ func main() {
 	pattern := os.Args[1]
 	dst := os.Args[2]
 	pkgName := os.Args[3]
-	prefix := os.Args[4]
+	prefix := ""
+	if len(os.Args) < 5 {
+		prefix = os.Args[4]
+	}
 	matches, err := filepath.Glob(pattern)
 	if err != nil {
 		fmt.Println("Failed to parse file glob")
@@ -29,7 +32,7 @@ func main() {
 		panic(err)
 	}
 	for _, match := range matches {
-		fileName := strings.Title(strings.TrimRight(match, ".svg"))
+		fileName := strings.Title(strings.TrimRight(filepath.Base(match), ".svg"))
 		f, err := os.Open(match)
 		if err != nil {
 			panic(err)

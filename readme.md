@@ -19,8 +19,10 @@ go get -t github.com/wrnrlr/svg2ivg/cmd/svg2ivg
 ``` 
 
 ```
-svg2ivg path/to/*.svg output package prefix
+svg2ivg path/to/*.svg output.go package (prefix)
 ```
+
+* `prefix` is optional
 
 ### Example
 
