@@ -13,20 +13,14 @@ import (
 func main() {
 	pattern := os.Args[1]
 	dst := os.Args[2]
-	if dst == "" {
-		dst = "data"
-	}
 	pkgName := os.Args[3]
-	if pkgName == "" {
-		dst = "icons"
-	}
 	prefix := os.Args[4]
 	matches, err := filepath.Glob(pattern)
 	if err != nil {
 		fmt.Println("Failed to parse file glob")
 		panic(err)
 	}
-	output, err := os.Open(dst)
+	output, err := os.OpenFile(dst, os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
 		panic(err)
 	}
@@ -35,7 +29,7 @@ func main() {
 		panic(err)
 	}
 	for _, match := range matches {
-		fileName := strings.TrimRight(match, ".svg")
+		fileName := strings.TrimRight(strings.Title(match), ".svg")
 		f, err := os.Open(match)
 		if err != nil {
 			panic(err)
@@ -46,10 +40,11 @@ func main() {
 		}
 		ivg, err := svg.IVG()
 		if err != nil {
+			fmt.Printf("error converting to ivg: %v", err)
 			panic(err)
 		}
 		varName := strcase.ToCamel(fmt.Sprintf("%s%s", prefix, fileName))
-		_, err = output.WriteString(fmt.Sprintf("var %s = %#v\n\n", varName, ivg))
+		_, err = output.WriteString(fmt.Sprintf("var %s = %#v\n\n", varName, []byte(ivg)))
 		if err != nil {
 			panic(err)
 		}

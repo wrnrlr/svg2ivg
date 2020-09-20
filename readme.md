@@ -12,13 +12,15 @@ go install github.com/wrnrlr/svg2ivg/cmd/svg2ivg
 
 ### Usage
 
-```
-svg2ivg path/to/*.svg output package (prefix)
-```
+Add module as dependency
 
-* `output` is `data.go` by default
-* `package` is `icons` by default
-* `prefix` is optional
+```
+go get -t github.com/wrnrlr/svg2ivg/cmd/svg2ivg
+``` 
+
+```
+svg2ivg path/to/*.svg output package prefix
+```
 
 ### Example
 
