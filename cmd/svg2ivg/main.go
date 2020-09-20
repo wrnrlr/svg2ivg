@@ -35,15 +35,17 @@ func main() {
 		fileName := strings.Title(strings.TrimRight(filepath.Base(match), ".svg"))
 		f, err := os.Open(match)
 		if err != nil {
+			fmt.Printf("error opening file: %v\n", match)
 			panic(err)
 		}
 		svg, err := svg2ivg.NewSVG(f)
 		if err != nil {
+			fmt.Printf("error %s creating svg for: %v\n", err, match)
 			panic(err)
 		}
 		ivg, err := svg.IVG()
 		if err != nil {
-			fmt.Printf("error converting to ivg: %v", err)
+			fmt.Printf("error converting to ivg: %v\n", err)
 			panic(err)
 		}
 		varName := strcase.ToCamel(fmt.Sprintf("%s%s", prefix, fileName))
