@@ -15,7 +15,7 @@ func main() {
 	dst := os.Args[2]
 	pkgName := os.Args[3]
 	prefix := ""
-	if len(os.Args) < 5 {
+	if len(os.Args) > 4 {
 		prefix = os.Args[4]
 	}
 	matches, err := filepath.Glob(pattern)
